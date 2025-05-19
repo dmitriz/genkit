@@ -52,7 +52,7 @@ class BookContextInputSchema(BaseModel):
 @ai.flow(name='textContextFlow')
 async def text_context_flow(_input: BookContextInputSchema) -> str:
     if _input.text_file_path.startswith('http'):
-        res = requests.get(_input.text_file_path)
+        res = requests.get(_input.text_file_path, timeout=60)
         res.raise_for_status()
         text_file_content = res.text
     else:

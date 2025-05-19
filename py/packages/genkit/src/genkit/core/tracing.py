@@ -154,7 +154,7 @@ class TelemetryServerSpanExporter(SpanExporter):
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
                 },
-            )
+            timeout=60)
 
         sys.stdout.flush()
         return SpanExportResult.SUCCESS
