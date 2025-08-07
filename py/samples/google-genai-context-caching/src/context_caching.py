@@ -20,8 +20,6 @@ In this sample user actor supplies "Tom Sawyer" book content from Gutenberg libr
 and model caches this context.
 As a result, model is capable to quickly relate to the book's content and answer the follow-up questions.
 """
-
-import requests
 import structlog
 from pydantic import BaseModel, Field
 
@@ -29,6 +27,7 @@ from genkit.ai import Genkit
 from genkit.plugins.google_genai import GoogleAI, googleai_name
 from genkit.plugins.google_genai.models.gemini import GoogleAIGeminiVersion
 from genkit.types import GenerationCommonConfig, Message, Role, TextPart
+from security import safe_requests
 
 logger = structlog.getLogger(__name__)
 
@@ -52,7 +51,7 @@ class BookContextInputSchema(BaseModel):
 @ai.flow(name='textContextFlow')
 async def text_context_flow(_input: BookContextInputSchema) -> str:
     if _input.text_file_path.startswith('http'):
-        res = requests.get(_input.text_file_path)
+        res = safe_requests.get(_input.text_file_path)
         res.raise_for_status()
         text_file_content = res.text
     else:
